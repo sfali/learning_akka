@@ -24,7 +24,7 @@ item's URL found in the '<link>' of the item. The description element is often w
 If you grab the content from the URL in the `<link>` element, you can use the BoilerPipe library included in the Learning
 Akka project to retrieve the content stripped of extraneous HTML elements/tags from it’s specific URL. For example:
 `de.l3s.boilerpipe.extractors.ArticleExtractor.INSTANCE.getText(new java.net.URL( \
-“http://www.cbc.ca/news/canada/ottawa/ottawa-weather-forecast-october-5-1.3791908?cmp=rss"))`
+"http://www.cbc.ca/news/canada/ottawa/ottawa-weather-forecast-october-5-1.3791908?cmp=rss"))`
 
 The endpoint should be
 ```
@@ -34,7 +34,7 @@ POST http://localhost:9000/contents/url
 The request body should be JSON indicating the URL to fetch the content from.
 ```
 {
-    “url”, “[url]”
+    "url", "[url]"
 }
 ```
 

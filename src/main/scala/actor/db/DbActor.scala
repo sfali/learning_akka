@@ -1,8 +1,15 @@
 package actor.db
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorLogging}
 import akka.actor.Actor.Receive
 
-class DbActor extends Actor {
-  override def receive: Receive = ???
+import scala.collection.mutable
+
+class DbActor extends Actor with ActorLogging {
+  val db = new mutable.HashMap[String, Object]
+  override def receive: Receive = {
+    case (k: String, v: Object) => db.put(k, v)
+    case o => log.info("unknown message ", o)
+  }
+
 }

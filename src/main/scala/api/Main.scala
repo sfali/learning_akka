@@ -18,7 +18,6 @@ object Main extends App with DbEntryProtocol {
 
   implicit val system = ActorSystem("webserver-actor-system")
   implicit val materializer = ActorMaterializer()
-  implicit def executionContext = system.dispatcher
 
   implicit val timeout = Timeout(2.seconds)
 

@@ -37,3 +37,67 @@ Retrieve a piece of content
 ```
 curl -i http://localhost:9000/db?key=foo
 ```
+
+## Chapter 3
+The goal of this chapter is to have your application retreive an RSS feed and store the contents of each article in the feed in the `DbActor`.
+
+#### Requirement 1
+Create a REST endpoint that accepts a URL of content that should be downloaded via an RSS feed. The application will
+retrieve the RSS feed from the URL provided, parse out the articles (items) and store the content of those articles in
+the AkkaDB we created in Chapter 2.
+
+When storing content in the AkkaDb, ou should use the `<guid>` element as the key for each `<item>` in the RSS feed. The value
+stored in the AkkaDb could be the `<description>` element of the item or you may opt to download the content from the
+item's URL found in the '<link>' of the item. The description element is often wrapped in a CDATA which you’ll need to discard.
+
+If you grab the content from the URL in the `<link>` element, you can use the BoilerPipe library included in the Learning
+Akka project to retrieve the content stripped of extraneous HTML elements/tags from it’s specific URL. For example:
+`de.l3s.boilerpipe.extractors.ArticleExtractor.INSTANCE.getText(new java.net.URL( \
+"http://www.cbc.ca/news/canada/ottawa/ottawa-weather-forecast-october-5-1.3791908?cmp=rss"))`
+
+The endpoint should be
+```
+POST http://localhost:9000/contents/url
+```
+
+The request body should be JSON indicating the URL to fetch the content from.
+```
+{
+    "url", "[url]"
+}
+```
+
+If content cannot be downloaded from the URL ,return a 404 error, Not Found.
+
+If the URL has content but it’s not in the format you expect, return a 400 error, Bad Request. If the supplied URL is invalid, return a 400 error, Bad Request.
+
+#### Requirement 2
+Create a REST endpoint that will return the content for a given guid.
+```
+GET http://localhost:9000/content/guid/[guid]
+```
+
+If the guid (key) is not in the AkkaDB, return a 404 error, Not Found.
+
+#### Requirement 3
+Create a REST endpoint that will return the guids for all content in the system. You do not need to paginate this data.
+```
+GET http://localhost:9000/contents/guids
+```
+
+#### Example Curls
+
+Parse an RSS feed
+```
+curl -i -H "Content-Type: application/json" -X POST -d '{"url":"http://rss.cbc.ca/lineup/world.xml"}' http://localhost:9000/contents/url
+```
+
+List the guid keys in the DB
+```
+curl -i http://localhost:9000/contents/guids
+```
+
+Retrieve a piece of content
+```
+curl -i http://localhost:9000/content/guid/[a guid from the content in the DB]
+```

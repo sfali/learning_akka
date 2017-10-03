@@ -39,6 +39,14 @@ object Main extends App with DbEntryProtocol {
           }
         }
     } ~
+      path("content") {
+        get {
+          parameters('key.as[String]) { key =>
+            val value = db ? key
+            complete(value.mapTo[String])
+          }
+        }
+      } ~
       path("quit") {
         post {
           system.terminate()
